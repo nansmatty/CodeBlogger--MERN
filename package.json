@@ -1,0 +1,36 @@
+{
+  "name": "codeblogger",
+  "version": "1.0.0",
+  "description": "A simple blog application with curd operations in MERN",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "nodemon server.js",
+    "server": "npm start --prefix client",
+    "dev": "concurrently \"npm start\" \"npm run server\"",
+    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix client && npm run build --prefix client"
+  },
+  "keywords": [
+    "React",
+    "Redux",
+    "MERN",
+    "MongoDB",
+    "ExpressJs",
+    "NodeJs"
+  ],
+  "author": "Narayan Maity",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "express-async-handler": "^1.2.0",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^6.0.12",
+    "morgan": "^1.10.0"
+  },
+  "devDependencies": {
+    "concurrently": "^6.3.0",
+    "nodemon": "^2.0.14"
+  }
+}
