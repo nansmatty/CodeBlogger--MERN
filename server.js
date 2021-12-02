@@ -24,6 +24,7 @@ app.use('/api/category/', categoryRoute);
 // -------deployment code---------------------------------//
 
 const __dirname = path.resolve();
+
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static(path.join(__dirname, '/client/build')));
 
@@ -32,7 +33,7 @@ if (process.env.NODE_ENV === 'production') {
   );
 } else {
   app.get('/', (req, res) => {
-    res.send('API is running..');
+    res.send('API is running....');
   });
 }
 
