@@ -37,14 +37,12 @@ import {
 // List Posts with Page Number and search keyword=======================================
 
 export const listPosts =
-  (keyword = '', pageNumber = '') =>
+  (pageNumber = '') =>
   async (dispatch) => {
     try {
       dispatch({ type: POST_LIST_REQUEST });
 
-      const { data } = await axios.get(
-        `/api/posts?keyword=${keyword}&pageNumber=${pageNumber}`
-      );
+      const { data } = await axios.get(`/api/posts?pageNumber=${pageNumber}`);
 
       dispatch({
         type: POST_LIST_SUCCESS,

@@ -38,13 +38,13 @@ const App = () => {
         />
         <Route exact path="/admin/create_category" component={CreateCategory} />
         <Route exact path="/admin/categories" component={AdminCategories} />
-        <Route exact path="/search/:keyword" component={HomePage} />
+        {/* <Route exact path="/search/:keyword" component={HomePage} /> */}
         <Route exact path="/page/:pageNumber" component={HomePage} />
-        <Route
+        {/* <Route
           exact
           path="/search/:keyword/page/:pageNumber"
           component={HomePage}
-        />
+        /> */}
         <Route exact path="/" component={HomePage} />
       </main>
       <Footer />
