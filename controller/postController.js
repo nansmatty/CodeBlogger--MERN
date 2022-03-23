@@ -6,22 +6,22 @@ import Post from '../models/PostModel.js';
 // @access  Private
 
 export const createPost = asyncHandler(async (req, res) => {
-  const { title, desc, img, categories } = req.body;
+	const { title, desc, img, categories } = req.body;
 
-  if (!title || !desc || !categories || !img) {
-    res.status(400);
-    throw new Error('Please fill all the fields');
-  }
-  const post = new Post({
-    user: req.user._id,
-    title,
-    desc,
-    img,
-    categories,
-  });
+	if (!title || !desc || !categories || !img) {
+		res.status(400);
+		throw new Error('Please fill all the fields');
+	}
+	const post = new Post({
+		user: req.user._id,
+		title,
+		desc,
+		img,
+		categories,
+	});
 
-  const newPost = await post.save();
-  res.status(200).json(newPost);
+	const newPost = await post.save();
+	res.status(200).json(newPost);
 });
 
 // @desc    Get all post
@@ -29,24 +29,24 @@ export const createPost = asyncHandler(async (req, res) => {
 // @access  Public
 
 export const getPosts = asyncHandler(async (req, res) => {
-  const pageSize = 9;
-  const page = Number(req.query.pageNumber) || 1;
+	const pageSize = 9;
+	const page = Number(req.query.pageNumber) || 1;
 
-  // const keyword = req.query.keyword
-  //   ? {
-  //       title: {
-  //         $regex: req.query.keyword,
-  //         $options: 'i',
-  //       },
-  //     }
-  //   : {};
+	// const keyword = req.query.keyword
+	//   ? {
+	//       title: {
+	//         $regex: req.query.keyword,
+	//         $options: 'i',
+	//       },
+	//     }
+	//   : {};
 
-  const count = await Post.countDocuments({});
-  const posts = await Post.find({})
-    .limit(pageSize)
-    .skip(pageSize * (page - 1));
+	const count = await Post.countDocuments({});
+	const posts = await Post.find({})
+		.limit(pageSize)
+		.skip(pageSize * (page - 1));
 
-  res.json({ posts, page, pages: Math.ceil(count / pageSize) });
+	res.json({ posts, page, pages: Math.ceil(count / pageSize) });
 });
 
 // @desc    Get post By Id
@@ -54,13 +54,13 @@ export const getPosts = asyncHandler(async (req, res) => {
 // @access  Public
 
 export const getPostById = asyncHandler(async (req, res) => {
-  const post = await Post.findById(req.params.id);
-  if (post) {
-    res.status(200).json(post);
-  } else {
-    res.status(404);
-    throw new Error('Post not found');
-  }
+	const post = await Post.findById(req.params.id);
+	if (post) {
+		res.status(200).json(post);
+	} else {
+		res.status(404);
+		throw new Error('Post not found');
+	}
 });
 
 // @desc    Get post By User Id
@@ -68,13 +68,13 @@ export const getPostById = asyncHandler(async (req, res) => {
 // @access  Public
 
 export const getPostByUserId = asyncHandler(async (req, res) => {
-  const posts = await Post.find({ user: req.user._id });
-  if (posts) {
-    res.status(200).json(posts);
-  } else {
-    res.status(404);
-    throw new Error('Posts not found');
-  }
+	const posts = await Post.find({ user: req.user._id });
+	if (posts) {
+		res.status(200).json(posts);
+	} else {
+		res.status(404);
+		throw new Error('Posts not found');
+	}
 });
 
 // @desc    Update post
@@ -82,26 +82,26 @@ export const getPostByUserId = asyncHandler(async (req, res) => {
 // @access  Private
 
 export const updatePost = asyncHandler(async (req, res) => {
-  const { title, desc, image, categories } = req.body;
-  const post = await Post.findById(req.params.id);
+	const { title, desc, image, categories } = req.body;
+	const post = await Post.findById(req.params.id);
 
-  if (post.user.toString() !== req.user._id.toString()) {
-    res.status(401);
-    throw new Error("You can't perform this action");
-  }
+	if (post.user.toString() !== req.user._id.toString()) {
+		res.status(401);
+		throw new Error("You can't perform this action");
+	}
 
-  if (post) {
-    post.title = title;
-    post.desc = desc;
-    post.image = image;
-    post.categories = categories;
+	if (post) {
+		post.title = title;
+		post.desc = desc;
+		post.image = image;
+		post.categories = categories;
 
-    const updatedPost = await post.save();
-    res.json(updatedPost);
-  } else {
-    res.status(404);
-    throw new Error('Post not found!');
-  }
+		const updatedPost = await post.save();
+		res.json(updatedPost);
+	} else {
+		res.status(404);
+		throw new Error('Post not found!');
+	}
 });
 
 // @desc    Delete a post
@@ -109,14 +109,14 @@ export const updatePost = asyncHandler(async (req, res) => {
 // @access  Private and Admin
 
 export const deletePost = asyncHandler(async (req, res) => {
-  const post = await Post.findById(req.params.id);
-  if (post) {
-    await post.remove();
-    res.json({ message: 'Post deleted' });
-  } else {
-    res.status(404);
-    throw new Error('Post not found');
-  }
+	const post = await Post.findById(req.params.id);
+	if (post) {
+		await post.remove();
+		res.json({ message: 'Post deleted' });
+	} else {
+		res.status(404);
+		throw new Error('Post not found');
+	}
 });
 
 // @desc    Like or remove like from post
@@ -124,46 +124,47 @@ export const deletePost = asyncHandler(async (req, res) => {
 // @access  Private
 
 export const likePost = asyncHandler(async (req, res) => {
-  const post = await Post.findById(req.params.id);
-  const loginUser = req?.user?._id;
-  const isLiked = post?.isLiked;
-  const alreadyDisliked = post?.disLikes?.find(
-    (user) => user?.toString() === loginUser?.toString()
-  );
+	const post = await Post.findById(req.params.id);
+	const loginUser = req?.user?.id;
+	console.log('Login User', loginUser);
+	const isLiked = post?.isLiked;
+	const alreadyDisliked = post?.disLikes?.find(
+		(user) => user?.toString() === loginUser?.toString()
+	);
 
-  if (alreadyDisliked) {
-    const post = await Post.findByIdAndUpdate(
-      req.params.id,
-      {
-        $pull: { disLikes: loginUser },
-        isDisLiked: false,
-      },
-      { new: true }
-    );
-    res.json(post);
-  }
+	if (alreadyDisliked) {
+		const post = await Post.findByIdAndUpdate(
+			req.params.id,
+			{
+				$pull: { disLikes: loginUser },
+				isDisLiked: false,
+			},
+			{ new: true }
+		);
+		res.json(post);
+	}
 
-  if (isLiked) {
-    const post = await Post.findByIdAndUpdate(
-      req.params.id,
-      {
-        $pull: { likes: loginUser },
-        isLiked: false,
-      },
-      { new: true }
-    );
-    res.json(post);
-  } else {
-    const post = await Post.findByIdAndUpdate(
-      req.params.id,
-      {
-        $push: { likes: loginUser },
-        isLiked: true,
-      },
-      { new: true }
-    );
-    res.json(post);
-  }
+	if (isLiked) {
+		const post = await Post.findByIdAndUpdate(
+			req.params.id,
+			{
+				$pull: { likes: loginUser },
+				isLiked: false,
+			},
+			{ new: true }
+		);
+		res.json(post);
+	} else {
+		const post = await Post.findByIdAndUpdate(
+			req.params.id,
+			{
+				$push: { likes: loginUser },
+				isLiked: true,
+			},
+			{ new: true }
+		);
+		res.json(post);
+	}
 });
 
 // @desc    Dislike or remove dislike from post
@@ -171,46 +172,46 @@ export const likePost = asyncHandler(async (req, res) => {
 // @access  Private
 
 export const disLikePost = asyncHandler(async (req, res) => {
-  const post = await Post.findById(req.params.id);
-  const loginUser = req?.user?._id;
-  const isDisLiked = post?.isDisLiked;
-  const alreadyLiked = post?.likes?.find(
-    (userId) => userId?.toString() === loginUser?.toString()
-  );
+	const post = await Post.findById(req.params.id);
+	const loginUser = req?.user?.id;
+	const isDisLiked = post?.isDisLiked;
+	const alreadyLiked = post?.likes?.find(
+		(userId) => userId?.toString() === loginUser?.toString()
+	);
 
-  if (alreadyLiked) {
-    const post = await Post.findByIdAndUpdate(
-      req.params.id,
-      {
-        $pull: { likes: loginUser },
-        isLiked: false,
-      },
-      { new: true }
-    );
-    res.json(post);
-  }
+	if (alreadyLiked) {
+		const post = await Post.findByIdAndUpdate(
+			req.params.id,
+			{
+				$pull: { likes: loginUser },
+				isLiked: false,
+			},
+			{ new: true }
+		);
+		res.json(post);
+	}
 
-  if (isDisLiked) {
-    const post = await Post.findByIdAndUpdate(
-      req.params.id,
-      {
-        $pull: { disLikes: loginUser },
-        isDisLiked: false,
-      },
-      { new: true }
-    );
-    res.json(post);
-  } else {
-    const post = await Post.findByIdAndUpdate(
-      req.params.id,
-      {
-        $push: { disLikes: loginUser },
-        isDisLiked: true,
-      },
-      { new: true }
-    );
-    res.json(post);
-  }
+	if (isDisLiked) {
+		const post = await Post.findByIdAndUpdate(
+			req.params.id,
+			{
+				$pull: { disLikes: loginUser },
+				isDisLiked: false,
+			},
+			{ new: true }
+		);
+		res.json(post);
+	} else {
+		const post = await Post.findByIdAndUpdate(
+			req.params.id,
+			{
+				$push: { disLikes: loginUser },
+				isDisLiked: true,
+			},
+			{ new: true }
+		);
+		res.json(post);
+	}
 });
 
 // @desc    Comment on a post
@@ -218,25 +219,25 @@ export const disLikePost = asyncHandler(async (req, res) => {
 // @access  Private
 
 export const createComment = asyncHandler(async (req, res) => {
-  const post = await Post.findById(req.params.id);
+	const post = await Post.findById(req.params.id);
 
-  const newComment = {
-    user: req.user._id,
-    text: req.body.text,
-    name: req.user.name,
-    pic: req.user.pic,
-  };
+	const newComment = {
+		user: req.user._id,
+		text: req.body.text,
+		name: req.user.name,
+		pic: req.user.pic,
+	};
 
-  if (post) {
-    post.comments.push(newComment);
+	if (post) {
+		post.comments.push(newComment);
 
-    await post.save();
+		await post.save();
 
-    res.status(200).json(post);
-  } else {
-    res.status(404);
-    throw new Error('Post not found');
-  }
+		res.status(200).json(post);
+	} else {
+		res.status(404);
+		throw new Error('Post not found');
+	}
 });
 
 // @desc    Delete Comment on a post
@@ -244,29 +245,29 @@ export const createComment = asyncHandler(async (req, res) => {
 // @access  Private
 
 export const deleteComment = asyncHandler(async (req, res) => {
-  const post = await Post.findById(req.params.id);
+	const post = await Post.findById(req.params.id);
 
-  const comment = post.comments.find(
-    (comment) => comment.id === req.params.comment_id
-  );
+	const comment = post.comments.find(
+		(comment) => comment.id === req.params.comment_id
+	);
 
-  if (!comment) {
-    res.status(404);
-    throw new Error('Comment not found');
-  }
+	if (!comment) {
+		res.status(404);
+		throw new Error('Comment not found');
+	}
 
-  //Check User
+	//Check User
 
-  if (comment.user.toString() === req.user._id.toString()) {
-    post.comments = post.comments.filter(
-      ({ id }) => id !== req.params.comment_id
-    );
+	if (comment.user.toString() === req.user._id.toString()) {
+		post.comments = post.comments.filter(
+			({ id }) => id !== req.params.comment_id
+		);
 
-    await post.save();
+		await post.save();
 
-    return res.json(post.comments);
-  } else {
-    res.status(401);
-    throw new Error('User not authorized');
-  }
+		return res.json(post.comments);
+	} else {
+		res.status(401);
+		throw new Error('User not authorized');
+	}
 });
